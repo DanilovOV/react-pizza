@@ -1,11 +1,17 @@
 import React from 'react';
-function Sort() {
+function Sort({ sortMethod, onChangeSort }) {
   const [popupVisibility, setPopupVisibility] = React.useState(false); // видимость попапа c вариантами сортировки
-  const [selectedSort, setSelectedSort] = React.useState(0); // выбранный вариант сортировки
-  const sortList = ['популярности', 'цене', 'алфавиту']; // список вариантов сортировки
+  const sortMethodsList = [
+    { name: 'популярности (по возрастанию)', method: 'rating' },
+    { name: 'популярности (по убыванию)', method: '-rating' },
+    { name: 'цене (по возрастанию)', method: 'price' },
+    { name: 'цене (по убыванию)', method: '-price' },
+    { name: 'алфавиту (по возрастанию)', method: 'title' },
+    { name: 'алфавиту (по убыванию)', method: '-title ' },
+  ]; // список вариантов сортировки
 
   const onClickSort = (index) => {
-    setSelectedSort(index);
+    onChangeSort(index);
     setPopupVisibility(false);
   };
 
@@ -24,17 +30,17 @@ function Sort() {
           />
         </svg>
         <b>Сортировка по:</b>
-        <span onClick={() => setPopupVisibility(!popupVisibility)}>{sortList[selectedSort]}</span>
+        <span onClick={() => setPopupVisibility(!popupVisibility)}>{sortMethod.name}</span>
       </div>
       {popupVisibility && (
         <div className="sort__popup">
           <ul>
-            {sortList.map((sort, index) => (
+            {sortMethodsList.map((obj, index) => (
               <li
-                onClick={() => onClickSort(index)}
-                className={selectedSort === index ? 'active' : ''}
+                onClick={() => onClickSort(obj)}
+                className={sortMethod.method === obj.method ? 'active' : ''}
                 key={index}>
-                {sort}
+                {obj.name}
               </li>
             ))}
           </ul>

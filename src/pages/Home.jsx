@@ -8,22 +8,35 @@ import Skeleton from '../components/PizzaBlock/Skeleton';
 const Home = () => {
   const [pizzas, setPizzas] = React.useState([]);
   const [isLoading, setIsLoading] = React.useState(true);
+  const [categoryID, setCategoryID] = React.useState(0);
+  const [sortMethod, setSortMethod] = React.useState({
+    name: 'популярности',
+    method: 'rating',
+  });
 
   React.useEffect(() => {
-    fetch('https://628e4808a339dfef87ab4f4b.mockapi.io/items')
+    setIsLoading(true);
+
+    const category = categoryID > 0 ? `category=${categoryID}` : '';
+    const sortBy = sortMethod.method.replace('-', '');
+    const order = sortMethod.method.includes('-') ? 'desc' : 'asc';
+
+    fetch(
+      `https://628e4808a339dfef87ab4f4b.mockapi.io/items?${category}&sortBy=${sortBy}&order=${order}`,
+    )
       .then((response) => response.json())
       .then((pizzasArr) => {
         setPizzas(pizzasArr);
         setIsLoading(false);
       });
     window.scrollTo(0, 0);
-  }, []);
+  }, [categoryID, sortMethod]);
 
   return (
     <div className="container">
       <div className="content__top">
-        <Categories />
-        <Sort />
+        <Categories value={categoryID} onChangeCategory={(id) => setCategoryID(id)} />
+        <Sort sortMethod={sortMethod} onChangeSort={(method) => setSortMethod(method)} />
       </div>
       <h2 className="content__title">Все пиццы</h2>
       <div className="content__items">
