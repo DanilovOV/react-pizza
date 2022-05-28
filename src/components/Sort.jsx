@@ -8,7 +8,7 @@ function Sort({ sortMethod, onChangeSort }) {
     { name: 'цене (по убыванию)', method: '-price' },
     { name: 'алфавиту (по возрастанию)', method: 'title' },
     { name: 'алфавиту (по убыванию)', method: '-title ' },
-  ]; // список вариантов сортировки
+  ];
 
   const onClickSort = (index) => {
     onChangeSort(index);
