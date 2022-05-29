@@ -7,6 +7,13 @@ import clearIcon from '../../assets/img/clearIcon.svg';
 
 const Search = () => {
   const { searchValue, setSearchValue } = React.useContext(SearchContext);
+  const inputRef = React.useRef();
+
+  const onClickClear = () => {
+    setSearchValue('');
+    inputRef.current.focus();
+  };
+
   return (
     <div className={styles.root}>
       <svg
@@ -43,17 +50,13 @@ const Search = () => {
         />
       </svg>
       <input
+        ref={inputRef}
         className={styles.input}
         placeholder="Поиск пиццы..."
         value={searchValue}
         onChange={(event) => setSearchValue(event.target.value)}
       />
-      <img
-        className={styles.clearIcon}
-        src={clearIcon}
-        onClick={() => setSearchValue('')}
-        alt="Очистить"
-      />
+      <img className={styles.clearIcon} src={clearIcon} onClick={onClickClear} alt="Очистить" />
     </div>
   );
 };
