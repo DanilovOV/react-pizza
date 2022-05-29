@@ -1,17 +1,24 @@
 import React from 'react';
-function Sort({ sortMethod, onChangeSort }) {
-  const [popupVisibility, setPopupVisibility] = React.useState(false); // видимость попапа c вариантами сортировки
-  const sortMethodsList = [
-    { name: 'популярности (по возрастанию)', method: 'rating' },
-    { name: 'популярности (по убыванию)', method: '-rating' },
-    { name: 'цене (по возрастанию)', method: 'price' },
-    { name: 'цене (по убыванию)', method: '-price' },
-    { name: 'алфавиту (по возрастанию)', method: 'title' },
-    { name: 'алфавиту (по убыванию)', method: '-title ' },
-  ];
+import { useDispatch, useSelector } from 'react-redux';
+import { setSortMethod } from '../redux/slices/filterSlice';
 
-  const onClickSort = (index) => {
-    onChangeSort(index);
+const sortMethodsList = [
+  { name: 'популярности (по возрастанию)', method: 'rating' },
+  { name: 'популярности (по убыванию)', method: '-rating' },
+  { name: 'цене (по возрастанию)', method: 'price' },
+  { name: 'цене (по убыванию)', method: '-price' },
+  { name: 'алфавиту (по возрастанию)', method: 'title' },
+  { name: 'алфавиту (по убыванию)', method: '-title ' },
+];
+
+function Sort() {
+  const dispatch = useDispatch();
+  const sort = useSelector((state) => state.filterSlice.sort);
+
+  const [popupVisibility, setPopupVisibility] = React.useState(false); // видимость попапа c вариантами сортировки
+
+  const onClickSort = (obj) => {
+    dispatch(setSortMethod(obj));
     setPopupVisibility(false);
   };
 
@@ -30,7 +37,7 @@ function Sort({ sortMethod, onChangeSort }) {
           />
         </svg>
         <b>Сортировка по:</b>
-        <span onClick={() => setPopupVisibility(!popupVisibility)}>{sortMethod.name}</span>
+        <span onClick={() => setPopupVisibility(!popupVisibility)}>{sort.name}</span>
       </div>
       {popupVisibility && (
         <div className="sort__popup">
@@ -38,7 +45,7 @@ function Sort({ sortMethod, onChangeSort }) {
             {sortMethodsList.map((obj, index) => (
               <li
                 onClick={() => onClickSort(obj)}
-                className={sortMethod.method === obj.method ? 'active' : ''}
+                className={sort.method === obj.method ? 'active' : ''}
                 key={index}>
                 {obj.name}
               </li>
