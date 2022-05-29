@@ -1,17 +1,31 @@
 import React from 'react';
-
+import debounce from 'lodash.debounce';
 import { SearchContext } from '../../App';
 
 import styles from './Search.module.scss';
 import clearIcon from '../../assets/img/clearIcon.svg';
 
 const Search = () => {
-  const { searchValue, setSearchValue } = React.useContext(SearchContext);
+  const [inputValue, setInputValue] = React.useState(''); // для отображения в инпуте
+  const { setSearchValue } = React.useContext(SearchContext); // для поиска
   const inputRef = React.useRef();
 
   const onClickClear = () => {
     setSearchValue('');
+    setInputValue('');
     inputRef.current.focus();
+  };
+
+  const updateSearchValue = React.useCallback(
+    debounce((str) => {
+      setSearchValue(str);
+    }, 350),
+    [],
+  );
+
+  const onChangeInput = (event) => {
+    setInputValue(event.target.value);
+    updateSearchValue(event.target.value);
   };
 
   return (
@@ -53,10 +67,12 @@ const Search = () => {
         ref={inputRef}
         className={styles.input}
         placeholder="Поиск пиццы..."
-        value={searchValue}
-        onChange={(event) => setSearchValue(event.target.value)}
+        value={inputValue}
+        onChange={onChangeInput}
       />
-      <img className={styles.clearIcon} src={clearIcon} onClick={onClickClear} alt="Очистить" />
+      {inputValue && (
+        <img className={styles.clearIcon} src={clearIcon} onClick={onClickClear} alt="Очистить" />
+      )}
     </div>
   );
 };
