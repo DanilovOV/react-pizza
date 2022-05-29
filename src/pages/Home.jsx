@@ -28,12 +28,12 @@ const Home = () => {
     const order = sort.method.includes('-') ? 'desc' : 'asc';
     const search = searchValue ? `&search=${searchValue}` : '';
 
-    fetch(
-      `https://628e4808a339dfef87ab4f4b.mockapi.io/items?${category}&sortBy=${sortBy}&order=${order}${search}`,
-    )
-      .then((response) => response.json())
-      .then((pizzasArr) => {
-        setPizzas(pizzasArr);
+    axios
+      .get(
+        `https://628e4808a339dfef87ab4f4b.mockapi.io/items?${category}&sortBy=${sortBy}&order=${order}${search}`,
+      )
+      .then((response) => {
+        setPizzas(response.data);
         setIsLoading(false);
       });
     window.scrollTo(0, 0);
